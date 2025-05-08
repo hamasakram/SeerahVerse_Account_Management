@@ -9,6 +9,7 @@ from PIL import Image
 import io
 import base64
 from dateutil.relativedelta import relativedelta
+import uuid
 
 # Page configuration
 st.set_page_config(
@@ -71,6 +72,21 @@ ACCOUNTS = {
         "role": "Viewer"
     }
 }
+
+def initialize_transaction_files(accounts):
+    """
+    Ensure that a .json file exists for each account in the repo.
+    If not, create an empty list in the file.
+    """
+    for account in accounts:
+        filename = f"transactions_{account}.json"
+        if not os.path.exists(filename):
+            with open(filename, "w") as f:
+                json.dump([], f)
+
+# After defining ACCOUNTS
+define_accounts = ACCOUNTS.keys()
+initialize_transaction_files(define_accounts)
 
 def check_session_timeout():
     """Check if the session has timed out"""
@@ -143,13 +159,13 @@ def update_account_balance(account, amount, transaction_type):
     return new_balance
 
 def save_transaction(account, transaction):
-    """Save a new transaction and update balance"""
+    """Save a new transaction and update balance, with unique ID"""
+    transaction["id"] = str(uuid.uuid4())
     filename = f"transactions_{account}.json"
     transactions = load_transactions(account)
     transactions.append(transaction)
     with open(filename, 'w') as f:
         json.dump(transactions, f)
-    
     # Update account balance
     new_balance = update_account_balance(account, transaction["amount"], transaction["type"])
     log_audit("add_transaction", f"Added transaction: {transaction['type']} - {transaction['amount']}, New Balance: {new_balance}")
