@@ -80,7 +80,7 @@ def check_session_timeout():
             st.session_state.selected_account = None
             st.session_state.user_role = None
             st.error("Session timed out. Please login again.")
-            st.experimental_rerun()
+            st.rerun()
 
 def update_last_activity():
     """Update the last activity timestamp"""
