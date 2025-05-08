@@ -203,7 +203,7 @@ def home_page():
                     st.session_state.user_role = ACCOUNTS[account]["role"]
                     update_last_activity()
                     log_audit("login", f"User logged in: {account}")
-                    st.experimental_rerun()
+                    st.rerun()
                 else:
                     st.error("Invalid password!")
     else:
@@ -223,7 +223,7 @@ def account_page():
             st.session_state.authenticated = False
             st.session_state.selected_account = None
             st.session_state.user_role = None
-            st.experimental_rerun()
+            st.rerun()
     
     # Main content
     tabs = st.tabs(["Dashboard", "Transactions", "Reminders", "Audit Log"])
@@ -322,7 +322,7 @@ def show_transactions():
                 
                 save_transaction(st.session_state.selected_account, transaction)
                 st.success("Transaction added successfully!")
-                st.experimental_rerun()
+                st.rerun()
     
     # Display transactions
     transactions = load_transactions(st.session_state.selected_account)
@@ -355,7 +355,7 @@ def show_reminders():
             }
             save_reminder(st.session_state.selected_account, reminder)
             st.success("Reminder added successfully!")
-            st.experimental_rerun()
+            st.rerun()
     
     # Display reminders
     reminders = load_reminders(st.session_state.selected_account)
